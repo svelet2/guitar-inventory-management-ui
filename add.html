@@ -30,31 +30,54 @@
     <button onclick="addTheGuitar()">Add The Guitar</button>
 
     <script>
-      function addTheGuitar() {
-        let serialNumNode = document.getElementById("serialNum");
-        let serialNumber = serialNumNode.value;
-        let price = document.getElementById("price").value;
-        let builder = document.getElementById("builder").value;
-        let model = document.getElementById("model").value;
-        let type = document.getElementById("type").value;
-        let backWood = document.getElementById("backWood").value;
-        let topWood = document.getElementById("topWood").value;
+      async function addTheGuitar() {
+          let serialNumNode = document.getElementById("serialNum");
+          let serialNumber = serialNumNode.value;
+          let price = document.getElementById("price").value;
+          let builder = document.getElementById("builder").value;
+          let model = document.getElementById("model").value;
+          let type = document.getElementById("type").value;
+          let backWood = document.getElementById("backWood").value;
+          let topWood = document.getElementById("topWood").value;
 
-        let guitar = {serialNumber: serialNumber, price: price, builder: builder, model: model, type: type,
-                      backWood: backWood, topWood: topWood};
-        alert("You entered guitar: " + JSON.stringify(guitar));
+          if (serialNumber === "" || price === "" || builder === "" || model === "" || type === "" || backWood === "" || topWood === "") {
+              alert("Please fill in all fields");
+              return;
+          }
 
-        // clear inputs after
-        serialNumNode.value = "";
-        document.getElementById("price").value = "";
-        document.getElementById("builder").value = "";
-        document.getElementById("model").value = "";
-        document.getElementById("type").value = "";
-        document.getElementById("backWood").value = "";
-        document.getElementById("topWood").value = "";
+          let guitar = {
+              serialNumber: serialNumber, price: price, builder: builder.toUpperCase(), model: model,
+              type: type.toUpperCase(),
+              backWood: backWood.toUpperCase(), topWood: topWood.toUpperCase()
+          };
+          alert("You entered guitar: " + JSON.stringify(guitar));
 
-        // let duckImageNode = document.getElementById("duckImage");
-        // alert("The image:" + duckImageNode.files[0].name + ", size = " + duckImageNode.files[0].size);
+          let host = "http://localhost:8081";
+          let request = {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify(guitar)
+          };
+
+          let response = await fetch(host + "/inventory", request);
+          if (response.status === 200) {
+              message = "The guitar was added to the system";
+              // clear inputs after
+              serialNumNode.value = "";
+              document.getElementById("price").value = "";
+              document.getElementById("builder").value = "";
+              document.getElementById("model").value = "";
+              document.getElementById("type").value = "";
+              document.getElementById("backWood").value = "";
+              document.getElementById("topWood").value = "";
+          } else {
+              message = "Something went wrong. Please try again or contact the customer support team.";
+          }
+          alert(message);
+          // let duckImageNode = document.getElementById("duckImage");
+          // alert("The image:" + duckImageNode.files[0].name + ", size = " + duckImageNode.files[0].size);
       }
     </script>
 </body>

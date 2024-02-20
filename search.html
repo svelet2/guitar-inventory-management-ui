@@ -46,17 +46,51 @@
         </tbody>
     </table>
     <script>
-        let guitars = [
-            {serialNumber: "1", price: "100", builder: "Fender", model: "Stratocaster",
-                type: "Electric", backWood: "Maple", topWood: "Maple"},
-            {serialNumber: "2", price: "200", builder: "Gibson", model: "Les Paul",
-                type: "Electric", backWood: "Mahogany", topWood: "Maple"},
-            {serialNumber: "3", price: "300", builder: "Martin", model: "D-18",
-                type: "Acoustic", backWood: "Mahogany", topWood: "Spruce"},
-            {serialNumber: "4", price: "400", builder: "Taylor", model: "914ce",
-                type: "Acoustic", backWood: "Rosewood", topWood: "Cedar"}
-        ];
-        function search() {
+        let guitars = [];
+        async function getAll() {
+            let builder = document.getElementById("builder").value.toUpperCase();
+            let model = document.getElementById("model").value;
+            let type = document.getElementById("type").value.toUpperCase();
+            let backWood = document.getElementById("backWood").value.toUpperCase();
+            let topWood = document.getElementById("topWood").value.toUpperCase();
+
+            let host = "http://localhost:8081";
+            let request = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            // Constructing the URL query string based on provided values
+            let searchParams = new URLSearchParams();
+            if (builder) searchParams.append('builder', builder);
+            if (model) searchParams.append('model', model);
+            if (type) searchParams.append('type', type);
+            if (backWood) searchParams.append('backWood', backWood);
+            if (topWood) searchParams.append('topWood', topWood);
+
+            let url = host + "/inventory/search";
+            let queryString = searchParams.toString();
+            if (queryString) {
+                url += "?" + queryString;
+            }
+            console.log(url);
+
+            let response = await fetch(url, request);
+
+            if (!response.ok) {
+                alert("Something went wrong. Please try again or contact the customer support team.");
+                return;
+            }
+
+            return response.json();
+        }
+        async function search() {
+            if (guitars.length === 0) {
+                guitars = await getAll();
+            }
+
             let builder = document.getElementById("builder").value.toLowerCase();
             let model = document.getElementById("model").value.toLowerCase();
             let type = document.getElementById("type").value.toLowerCase();
@@ -66,8 +100,6 @@
             let table = document.getElementById("searchResult");
             table.innerHTML = "";
 
-            // let letter = duckType.charAt(0).toUpperCase();
-            // duckType = letter + duckType.slice(1).toLowerCase();
             for (let guitar of guitars){
                 let givenGuitar = {serialNumber: guitar.serialNumber, price: guitar.price, builder: builder,
                                     model: model, type: type, backWood: backWood, topWood: topWood};
@@ -110,7 +142,6 @@
                     let topWood = document.createTextNode(guitar.topWood);
                     let price = document.createTextNode(guitar.price);
 
-                    // test
                     serialNumberCell.appendChild(serialNumber);
                     builderCell.appendChild(builder);
                     modelCell.appendChild(model);
