@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="styleSheet.css">
+    <link rel="stylesheet" href="navbar.css">
 </head>
 <body>
-    <div class="container">
-        <a href="index.html">Guitar Inventory Management</a>
-        <a href="about.html">About</a>
-        <a href="add.html">Add Guitar</a>
-        <a href="search.html">Search</a>
-    </div>
+    <ul class="topnav">
+        <li><a href="index.html">Guitar Inventory Management</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a class="active" href="add.html">Add Guitar</a></li>
+        <li><a href="search.html">Search</a></li>
+        <li class="right"><a href="login.html">Login</a></li>
+    </ul>
+    <script src="configuration.js"></script>
+
+
     <label>Serial number:</label>
     <input id="serialNum"/>
     <label>Price:</label>
@@ -52,11 +57,13 @@
           };
           alert("You entered guitar: " + JSON.stringify(guitar));
 
-          let host = "https://guitar-inventory-management-svelet2.onrender.com";
+          let host = getHost();
+          const header = {"Authorization": `Bearer ${configuration.token()}`};
           let request = {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${configuration.token()}`
               },
               body: JSON.stringify(guitar)
           };
@@ -72,12 +79,13 @@
               document.getElementById("type").value = "";
               document.getElementById("backWood").value = "";
               document.getElementById("topWood").value = "";
+          } else if (response.status === 401) {
+              message = "You are not authorized to add a guitar. Please login and try again.";
+              logout();
           } else {
               message = "Something went wrong. Please try again or contact the customer support team.";
           }
           alert(message);
-          // let duckImageNode = document.getElementById("duckImage");
-          // alert("The image:" + duckImageNode.files[0].name + ", size = " + duckImageNode.files[0].size);
       }
     </script>
 </body>

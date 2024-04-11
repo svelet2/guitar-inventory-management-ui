@@ -1,19 +1,19 @@
-.container {
+/* .container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-}
-.container a {
-    color: peachpuff; /* Set color for all links */
-    text-decoration: none; /* Remove underline from all links */
-    margin-right: 20px; /* Add margin between links */
-    margin-bottom: 80px; /* Add margin between links */
+} */
+/* .container a {
+    color: peachpuff; 
+    text-decoration: none;
+    margin-right: 20px; 
+    margin-bottom: 80px; 
     font-size: 30px;
-}
-.container a:first-child {
-    color: darkslateblue; /* Change color of the first link */
+} */
+/* .container a:first-child {
+    color: darkslateblue; 
     font-size: 50px;
-}
+} */
 
 body {
     background-color: rosybrown; /* Set the background color to a light blue */

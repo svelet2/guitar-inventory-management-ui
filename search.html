@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="styleSheet.css">
+    <link rel="stylesheet" href="navbar.css">
 
 </head>
 <body>
-    <div class="container">
-        <a href="index.html">Guitar Inventory Management</a>
-        <a href="about.html">About</a>
-        <a href="add.html">Add Guitar</a>
-        <a href="search.html">Search</a>
-    </div>
+    <ul class="topnav">
+        <li><a href="index.html">Guitar Inventory Management</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="add.html">Add Guitar</a></li>
+        <li><a class="active" href="search.html">Search</a></li>
+        <li class="right"><a href="login.html">Login</a></li>
+    </ul>
+    
+    <script src="configuration.js"></script>
 
     <label>Builder:</label>
     <input id="builder"/>
@@ -54,11 +58,12 @@
             let backWood = document.getElementById("backWood").value.toUpperCase();
             let topWood = document.getElementById("topWood").value.toUpperCase();
 
-            let host = "https://guitar-inventory-management-svelet2.onrender.com";
+            let host = getHost();
             let request = {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${configuration.token()}`
                 }
             };
 
@@ -78,6 +83,10 @@
             console.log(url);
 
             let response = await fetch(url, request);
+
+            if (response.status == 401){
+              logout();
+            }
 
             if (!response.ok) {
                 alert("Something went wrong. Please try again or contact the customer support team.");
