@@ -1,4 +1,4 @@
-const mode = 0;
+const mode = 1;
 
 const host_local = "http://localhost:8080";
 const host_remote = "https://guitar-inventory-management-svelet2.onrender.com";
